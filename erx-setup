@@ -1,0 +1,74 @@
+# delete service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME
+# set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME ip-address 192.168.1.XXX
+# set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME mac-address aa:bb:cc:dd:ee:ff
+
+set firewall all-ping enable
+set firewall broadcast-ping disable
+set firewall ipv6-receive-redirects disable
+set firewall ipv6-src-route disable
+set firewall ip-src-route disable
+set firewall log-martians enable
+set firewall name WAN_IN default-action drop
+set firewall name WAN_IN description 'WAN to internal'
+set firewall name WAN_IN rule 10 action accept
+set firewall name WAN_IN rule 10 description 'Allow established/related'
+set firewall name WAN_IN rule 10 state established enable
+set firewall name WAN_IN rule 10 state related enable
+set firewall name WAN_IN rule 20 action drop
+set firewall name WAN_IN rule 20 description 'Drop invalid state'
+set firewall name WAN_IN rule 20 state invalid enable
+set firewall name WAN_LOCAL default-action drop
+set firewall name WAN_LOCAL description 'WAN to router'
+set firewall name WAN_LOCAL rule 10 action accept
+set firewall name WAN_LOCAL rule 10 description 'Allow established/related'
+set firewall name WAN_LOCAL rule 10 state established enable
+set firewall name WAN_LOCAL rule 10 state related enable
+set firewall name WAN_LOCAL rule 20 action drop
+set firewall name WAN_LOCAL rule 20 description 'Drop invalid state'
+set firewall name WAN_LOCAL rule 20 state invalid enable
+set firewall receive-redirects disable
+set firewall send-redirects enable
+set firewall source-validation disable
+set firewall syn-cookies enable
+commit
+
+set interfaces ethernet eth0 description WAN
+set interfaces ethernet eth0 firewall in name WAN_IN
+set interfaces ethernet eth0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 vif 0 address dhcp
+set interfaces ethernet eth0 vif 0 description 'WAN VLAN 0'
+set interfaces ethernet eth0 vif 0 dhcp-options default-route update
+set interfaces ethernet eth0 vif 0 dhcp-options default-route-distance 210
+set interfaces ethernet eth0 vif 0 dhcp-options name-server update
+set interfaces ethernet eth0 vif 0 firewall in name WAN_IN
+set interfaces ethernet eth0 vif 0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 vif 0 mac e0:22:04:86:c9:80
+set interfaces ethernet eth5 description 'ATT Gateway'
+set interfaces switch switch0 description Local
+set interfaces switch switch0 switch-port interface eth1
+set interfaces switch switch0 switch-port interface eth2
+set interfaces switch switch0 switch-port interface eth3
+set interfaces switch switch0 switch-port interface eth4
+set interfaces switch switch0 switch-port vlan-aware disable
+commit
+
+set service dhcp-server disabled false
+set service dhcp-server hostfile-update disable
+set service dhcp-server shared-network-name LAN authoritative enable
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 default-router 192.168.1.1
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 dns-server 192.168.1.24
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 lease 86400
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 start 192.168.1.38 stop 192.168.1.243
+set service dhcp-server static-arp disable
+set service dhcp-server use-dnsmasq disable
+commit
+
+set service dns forwarding cache-size 150
+set service dns forwarding listen-on switch0
+set service nat rule 5010 description 'masquerade for WAN'
+set service nat rule 5010 outbound-interface eth0.0
+set service nat rule 5010 type masquerade
+set system offload hwnat enable
+delete interfaces ethernet eth0 address
+set interfaces switch switch0 address 192.168.1.1/24
+commit;save
