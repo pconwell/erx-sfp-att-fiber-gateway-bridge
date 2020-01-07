@@ -17,6 +17,30 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME mac-address aa:bb:cc:dd:ee:ff
 ```
 
+port forwarding:
+
+```
+pconwell@ubnt:~$ configure 
+[edit]
+pconwell@ubnt# set po
+policy        port-forward  
+[edit]
+pconwell@ubnt# set port-forward rule 100 
+description    forward-to     original-port  protocol       
+[edit]
+pconwell@ubnt# set port-forward rule 100 description plex
+[edit]
+pconwell@ubnt# set port-forward rule 100 forward-to address 192.168.1.24
+[edit]
+pconwell@ubnt# set port-forward rule 100 forward-to port 32400          
+[edit]
+pconwell@ubnt# set port-forward rule 100 original-port 32400  
+[edit]
+pconwell@ubnt# set port-forward rule 100 protocol tcp_udp   
+[edit]
+pconwell@ubnt# commit
+```
+
 
 
 
