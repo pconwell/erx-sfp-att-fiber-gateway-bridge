@@ -15,7 +15,7 @@ commit
 
 set firewall name WAN_IN rule 110 action accept
 set firewall name WAN_IN rule 110 description flask
-set firewall name WAN_IN rule 110 destination address 192.168.1.24
+set firewall name WAN_IN rule 110 destination address 192.168.1.42
 set firewall name WAN_IN rule 110 destination port 5000
 set firewall name WAN_IN rule 110 log disable
 set firewall name WAN_IN rule 110 protocol tcp_udp
@@ -349,12 +349,59 @@ commit
 
 
 
-set service dns forwarding cache-size 150
+set service dns forwarding cache-size 300
 set service dns forwarding listen-on switch0
+
+
+
+
+set service dns forwarding name-server 192.168.1.24
+set service dns forwarding name-server 8.8.8.8
+set service dns forwarding options listen-address=192.168.1.24
+
+
+
+
+
+<pre>    nat {
+        rule 2 {
+            description plex
+            destination {
+                group {
+                    address-group ADDRv4_eth5
+                }
+                port 32400
+            }
+            inbound-interface eth5
+            inside-address {
+                address 192.168.1.24
+                port 32400
+            }
+            log disable
+            protocol tcp_udp
+            type destination
+        }
+</pre>
+
+
+
+
+
+
+
+
+
+
+
 set service nat rule 5010 description 'masquerade for WAN'
 set service nat rule 5010 outbound-interface eth0.0
 set service nat rule 5010 type masquerade
+
+
 set system offload hwnat enable
+
 delete interfaces ethernet eth0 address
+
 set interfaces switch switch0 address 192.168.1.1/24
+
 commit;save
