@@ -1,38 +1,30 @@
-# FIBER -> ONT -> eth0
-# Gateway -> eth5 (sfp)
-# swtich0 (eth[1-4]) -> LAN
+## Overview
+
+> FIBER -> ONT -> eth0
+
+> Gateway -> eth5 (sfp)
+
+> swtich0 (eth[1-4]) -> LAN
 
 
-# delete service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME
-# set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME ip-address 192.168.1.XXX
-# set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME mac-address aa:bb:cc:dd:ee:ff
+### Notes:
 
+to delete/add static mapping for dhcp
 
-
-
-set firewall name WAN_IN rule 100 action accept 
-set firewall name WAN_IN rule 100 description plex
-set firewall name WAN_IN rule 100 destination address 192.168.1.24
-set firewall name WAN_IN rule 100 destination port 32400          
-set firewall name WAN_IN rule 100 log disable           
-set firewall name WAN_IN rule 100 protocol tcp_udp 
-commit
-
-set firewall name WAN_IN rule 110 action accept
-set firewall name WAN_IN rule 110 description flask
-set firewall name WAN_IN rule 110 destination address 192.168.1.42
-set firewall name WAN_IN rule 110 destination port 5000
-set firewall name WAN_IN rule 110 log disable
-set firewall name WAN_IN rule 110 protocol tcp_udp
-commit
+```bash
+delete service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME ip-address 192.168.1.XXX
+set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME mac-address aa:bb:cc:dd:ee:ff
+```
 
 
 
 
 
 
+orignal script (with changes):
 
-
+```
 set firewall all-ping enable
 set firewall broadcast-ping disable
 set firewall ipv6-receive-redirects disable
@@ -49,7 +41,32 @@ set firewall name WAN_IN rule 10 state related enable
 set firewall name WAN_IN rule 20 action drop
 set firewall name WAN_IN rule 20 description 'Drop invalid state'
 set firewall name WAN_IN rule 20 state invalid enable
+```
 
+set firewall for plex and flask app
+
+```
+set firewall name WAN_IN rule 100 action accept 
+set firewall name WAN_IN rule 100 description plex
+set firewall name WAN_IN rule 100 destination address 192.168.1.24
+set firewall name WAN_IN rule 100 destination port 32400          
+set firewall name WAN_IN rule 100 log disable           
+set firewall name WAN_IN rule 100 protocol tcp_udp 
+commit
+```
+```
+set firewall name WAN_IN rule 110 action accept
+set firewall name WAN_IN rule 110 description flask
+set firewall name WAN_IN rule 110 destination address 192.168.1.42
+set firewall name WAN_IN rule 110 destination port 5000
+set firewall name WAN_IN rule 110 log disable
+set firewall name WAN_IN rule 110 protocol tcp_udp
+commit
+```
+
+back to original:
+
+```
 set firewall name WAN_LOCAL default-action drop
 set firewall name WAN_LOCAL description 'WAN to router'
 set firewall name WAN_LOCAL rule 10 action accept
@@ -97,27 +114,15 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 start 192.
 set service dhcp-server static-arp disable
 set service dhcp-server use-dnsmasq disable
 commit
+```
 
 
 
 
+Static Mapping (formatting needs to be fixed):
 
 
-
-
-
-
-
-
-
-
-# set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME ip-address 192.168.1.XXX
-# set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME mac-address aa:bb:cc:dd:ee:ff
-
-
-
-
-
+```
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping appleTV-master ip-address 192.168.1.53
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping appleTV-master mac-address 9c:20:7b:ea:60:cd
 
@@ -390,40 +395,26 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
                 unifi-controller 192.168.1.23
             }
         }
+```
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 set service dns forwarding cache-size 300
 set service dns forwarding listen-on switch0
-
-
 
 
 set service dns forwarding name-server 192.168.1.24
 set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options listen-address=192.168.1.24
+```
+
+don't know if this will be needed:
 
 
-
-
-
-<pre>    nat {
+<pre>   
+        nat {
         rule 2 {
             description plex
             destination {
@@ -446,13 +437,7 @@ set service dns forwarding options listen-address=192.168.1.24
 
 
 
-
-
-
-
-
-
-
+```
 set service nat rule 5010 description 'masquerade for WAN'
 set service nat rule 5010 outbound-interface eth0.0
 set service nat rule 5010 type masquerade
@@ -465,3 +450,4 @@ delete interfaces ethernet eth0 address
 set interfaces switch switch0 address 192.168.1.1/24
 
 commit;save
+```
