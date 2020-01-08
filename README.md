@@ -10,9 +10,9 @@ What I am trying to accomplish is to 'bypass' the G/R by connecting the ONT dire
 There are a lot of resources online that focus on the Ubiquiti Unified Security Gateway (USG), however the settings are slightly different. There are also some resources online that focus on the Ubuqiti Edgerouter Lite (ERL), which is very similar to the ERX-SFP except that the ERL (effectively) only has one LAN port while the ERX-SFP has one SFP port and 4 LAN ports (assuming one of your ports is being used for WAN).
 
 What I want to accomplish is:
-  1 Use eth0 as the WAN port
-  2 Use eth5 (the SFP port with an RJ45 SFP adapter) to authenticate with the G/R
-  3 use the remaining eth ports (1, 2, 3, 4) as a LAN switch
+1. Use eth0 as the WAN port (connected directly to the ONT)
+2. Use eth5 (the SFP port with an RJ45 SFP adapter) to authenticate with the G/R
+3. Use the remaining eth ports (1, 2, 3, 4) as a LAN switch
 
 ### Files
 
