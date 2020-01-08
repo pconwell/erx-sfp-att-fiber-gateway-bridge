@@ -68,6 +68,7 @@ commit
 
 ### Set Interface:
 #### eth0 (WAN | Connected to ONT):
+> make sure to change the `mac e0:22:04:86:c9:80` part to whatever the actual mac address is for your ATT gateway
 ```
 set interfaces ethernet eth0 description WAN
 set interfaces ethernet eth0 firewall in name WAN_IN
