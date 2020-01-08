@@ -20,7 +20,7 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 ## Basic Settings:
 > The `Basic Settings` should be more or less the same as the original source config file  
 > I have made notes where needed - but pay special attention to the dns section as that  
-> section has the most significant changes (if you are not running a dedicated dns server (like pihole)  
+> section has the most significant changes (if you are not running a dedicated dns server, like pihole)  
 #### General (A):
 ```
 set firewall all-ping enable
@@ -137,6 +137,14 @@ set service dns forwarding options listen-address=192.168.1.24
 commit
 ```
 
+#### gui:
+```
+set service gui http-port 80
+set service gui https-port 443
+set service gui older-ciphers disable
+commit
+```
+
 #### nat:
 ```
 set service nat rule 5010 description 'masquerade for WAN'
@@ -145,10 +153,68 @@ set service nat rule 5010 type masquerade
 commit
 ```
 
+#### ssh:
+```
+set service ssh port 22
+set service ssh protocol-version v2
+commit
+```
+
 ### Set System:
+#### hostname:
+```
+set system host-name ubnt
+commit
+```
+
+#### login:
+> need to verify this is the correct syntax  
+> obviously, replace USERNAME and PASSWORD with actual username and password
+```
+set system login user USERNAME authentication plaintext-password PASSWORD
+set system login user USERNAME level admin
+commit
+```
+
+#### nameserver:
+```
+set system nameserver 127.0.0.1
+commit
+```
+
+#### ntp:
+```
+set system ntp server 0.ubnt.pool.ntp.org
+set system ntp server 1.ubnt.pool.ntp.org
+set system ntp server 2.ubnt.pool.ntp.org
+set system ntp server 3.ubnt.pool.ntp.org
+commit
+```
+
 #### offload:
 ```
 set system offload hwnat enable
+set system offload ipsec disable
+commit
+```
+
+#### syslog:
+```
+set system syslog global facility all level notice
+set system syslog global facility protocols level debug
+commit
+```
+
+#### timezone:
+```
+set system time-zone America/Chicago
+commit
+```
+
+#### traffic analysis:
+```
+set system traffic-analysis dpi disable
+set sysetm traffic-analysis export disable
 commit
 ```
 
@@ -162,6 +228,10 @@ save
 
 
 ## Custom Changes:
+> these are the custom config settings for my specific network  
+> you might have *similar* settings, but the below config settings  
+> will almost definitely not work for your network without being edited significantly  
+
 ### set firewall for plex and flask app:
 > open up some specific ports for some services running on the network  
 > these will generally need to be matched with port fowarding below  
