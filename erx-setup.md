@@ -1,13 +1,25 @@
+# WIP
+This is still a work in progress, I have not yet been able to test these particular configuration settings
+
 ## Overview
 
-> FIBER -> ONT -> eth0
->
-> Gateway -> eth5 (sfp)
->
-> swtich0 (eth[1-4]) -> LAN
+The below configurations should get your ERX-SFP set into a bridge mode for use with ATT Fiber. These commands will be entered into the cli interface on your ubiquiti router by SSHing into your router. Once you ssh into the router, you can enter `configure` which will put you into the configuration editor. You will then enter the below commands. In general, you will need to enter `commit` to 'execute' the commands, then `save` to save the current configuration, then `exit` to exit the configuration editor. We will be entering the commands in chunks and committing those chunks step-by-step to help troubleshoot any issues that may come up.
 
+If you have tested your configuration and know for 100% sure that it will work without errors, you can just enter everything all at once and just commit, save, exit once at the end - but unless you know FOR SURE that you won't run into errors then take it step-by-step.
 
 ### Notes:
+
+#### Basic physical configuration:
+> FIBER -> ONT -> eth0  
+> Gateway -> eth5 (sfp)  
+> swtich0 (eth[1-4]) -> LAN
+
+#### General configuration commands:
+  - `configure`: enter the configuration editor
+  - `commit`: executes the configs that have been entered so far, but does not permenantly save them
+  - `save`: writes the committed configs to disk
+  - `exit`: exits the configuration editor
+  - `exit discard`: exit the configuration editor and discard any unsaved configs
 
 #### to delete/add static mapping for dhcp:
 ```
@@ -16,6 +28,17 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-mapping DEVICENAME mac-address aa:bb:cc:dd:ee:ff
 ```
 
+## Delete everything:
+> I don't know if this will work, I have a feeling that the router will not let you commit  
+> at this point because it won't allow certain configurations to be blank
+```
+delete firewall
+delete interfaces
+delete port-forwarding
+delete service
+delete system
+commit
+```
 
 ## Basic Settings:
 > The `Basic Settings` should be more or less the same as the original source config file  
