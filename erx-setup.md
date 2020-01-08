@@ -103,8 +103,10 @@ commit
 
 ### Set service:
 #### dhcp-server:
-> you will probably want to tweak this section depending on how you want your local IP addresses assigned
-> I have static mappings for most of my devices, and only have a dhcp pool for 10 possible devices
+> you will probably want to tweak this section depending on how you want your local IP addresses assigned  
+> I have static mappings for most of my devices, and only have a dhcp pool for 10 possible devices  
+> if you want all (or more) of your devices to be assigned IP address (instead of doing static mappings)
+> you will want to change `start 192.168.1.200 stop 192.168.1.209` to something appropriate for your network
 ```
 set service dhcp-server disabled false
 set service dhcp-server hostfile-update disable
@@ -120,7 +122,7 @@ commit
 ```
 
 #### dns:
-> I am using a separate DNS server (pihole) at 192.168.1.24
+> I am using a separate DNS server (pihole) at 192.168.1.24  
 
 ```
 set service dns forwarding cache-size 300
@@ -157,8 +159,8 @@ save
 
 ## Custom Changes:
 ### set firewall for plex and flask app:
-> open up some specific ports for some services running on the network
-> these will generally need to be matched with port fowarding below
+> open up some specific ports for some services running on the network  
+> these will generally need to be matched with port fowarding below  
 
 ```
 set firewall name WAN_IN rule 100 action accept
@@ -178,9 +180,9 @@ commit
 ```
 
 ### port forwarding:
-> foward some specific ports for services running on the network
-> these will generally need to be matched with firewall rules above
-> also note, for whatever reason, the edgerouter software will renumber these rules
+> foward some specific ports for services running on the network  
+> these will generally need to be matched with firewall rules above  
+> also note, for whatever reason, the edgerouter software will renumber these rules  
 
 ```
 set port-forward auto-firewall disable
