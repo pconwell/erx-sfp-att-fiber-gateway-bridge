@@ -17,7 +17,10 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 ```
 
 
-## Original script (with changes):
+## Basic Settings:
+> The `Basic Settings` should be more or less the same as the original source config file  
+> I have made notes where needed - but pay special attention to the dns section as that  
+> section has the most significant changes (if you are not running a dedicated dns server (like pihole)  
 #### General (A):
 ```
 set firewall all-ping enable
