@@ -19,6 +19,8 @@ If you have tested your configuration and know for 100% sure that it will work w
 #### General configuration commands:
   - `configure`: enter the configuration editor
   - `commit`: executes the configs that have been entered so far, but does not permenantly save them
+  - `commit-confirm`: same as `commit` except the router will reboot after 10 minutes and return to the previously saved config unless you `confirm`.
+  - `confirm`: confirms a `commit-confirm`
   - `save`: writes the committed configs to disk
   - `exit`: exits the configuration editor
   - `exit discard`: exit the configuration editor and discard any unsaved configs
