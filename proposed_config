@@ -1,3 +1,5 @@
+from: https://www.dslreports.com/forum/r32488644-eap-proxy-bypass-on-an-ER-X-utilizing-the-leftover-ports
+
 
 set firewall all-ping enable
 set firewall broadcast-ping disable
