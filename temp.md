@@ -962,8 +962,8 @@ commit-confirm
 in a new terminal  
 `sudo python /config/scripts/eap_proxy.py --restart-dhcp --ignore-when-wan-up --ignore-logoff --ping-gateway --set-mac eth0 eth5`  
 
-If it works, `confirm`
+If it works, `confirm` in the first terminal
 
-powercycle router and wait. if it works.
+powercycle router and wait. if it works...
 
-reboot router and confirm external IP is assigned to eth0.0
+reboot router and confirm WAN IP is assigned to eth0.0
