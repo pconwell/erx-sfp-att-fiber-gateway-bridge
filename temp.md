@@ -952,3 +952,13 @@ def main():
 if __name__ == "__main__":
     sys.exit(main())
 ```
+
+## test config
+
+`sudo chmod +x /config/scripts/eap_proxy.py`
+`sudo chmod +x /config/scripts/post-config.d/eap_proxy.sh`
+`sudo python /config/scripts/eap_proxy.py --restart-dhcp --ignore-when-wan-up --ignore-logoff --ping-gateway --set-mac eth0 eth5`
+
+powercycle router and wait. if it works.
+
+reboot router and confirm external IP is assigned to eth0.0
