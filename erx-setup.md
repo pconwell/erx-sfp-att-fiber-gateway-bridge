@@ -20,25 +20,24 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
 port forwarding:
 
 ```
-pconwell@ubnt:~$ configure 
-[edit]
-pconwell@ubnt# set po
-policy        port-forward  
-[edit]
-pconwell@ubnt# set port-forward rule 100 
-description    forward-to     original-port  protocol       
-[edit]
-pconwell@ubnt# set port-forward rule 100 description plex
-[edit]
-pconwell@ubnt# set port-forward rule 100 forward-to address 192.168.1.24
-[edit]
-pconwell@ubnt# set port-forward rule 100 forward-to port 32400          
-[edit]
-pconwell@ubnt# set port-forward rule 100 original-port 32400  
-[edit]
-pconwell@ubnt# set port-forward rule 100 protocol tcp_udp   
-[edit]
-pconwell@ubnt# commit
+set port-forward auto-firewall disable
+set port-forward hairpin-nat enable
+set port-forward lan-interface switch0
+set port-forward wan-interface eth5
+
+
+set port-forward rule 100 description plex
+set port-forward rule 100 forward-to address 192.168.1.24
+set port-forward rule 100 forward-to port 32400          
+set port-forward rule 100 original-port 32400  
+set port-forward rule 100 protocol tcp_udp   
+
+set port-forward rule 110 description flask
+set port-forward rule 110 forward-to address 192.168.1.42
+set port-forward rule 110 forward-to port 5000
+set port-forward rule 110 original-port 5000
+set port-forward rule 110 protocol tcp_udp
+commit
 ```
 
 
@@ -46,7 +45,7 @@ pconwell@ubnt# commit
 
 
 
-orignal script (with changes):
+# orignal script (with changes):
 
 ```
 set firewall all-ping enable
@@ -67,7 +66,7 @@ set firewall name WAN_IN rule 20 description 'Drop invalid state'
 set firewall name WAN_IN rule 20 state invalid enable
 ```
 
-set firewall for plex and flask app
+set firewall for plex and flask app (my addition):
 
 ```
 set firewall name WAN_IN rule 100 action accept 
@@ -76,9 +75,7 @@ set firewall name WAN_IN rule 100 destination address 192.168.1.24
 set firewall name WAN_IN rule 100 destination port 32400          
 set firewall name WAN_IN rule 100 log disable           
 set firewall name WAN_IN rule 100 protocol tcp_udp 
-commit
-```
-```
+
 set firewall name WAN_IN rule 110 action accept
 set firewall name WAN_IN rule 110 description flask
 set firewall name WAN_IN rule 110 destination address 192.168.1.42
@@ -88,7 +85,7 @@ set firewall name WAN_IN rule 110 protocol tcp_udp
 commit
 ```
 
-back to original:
+# orignal script (with changes):
 
 ```
 set firewall name WAN_LOCAL default-action drop
@@ -421,7 +418,7 @@ set service dhcp-server shared-network-name LAN subnet 192.168.1.0/24 static-map
         }
 ```
 
-
+# orignal script (with changes):
 
 
 ```
@@ -432,36 +429,8 @@ set service dns forwarding listen-on switch0
 set service dns forwarding name-server 192.168.1.24
 set service dns forwarding name-server 8.8.8.8
 set service dns forwarding options listen-address=192.168.1.24
-```
-
-don't know if this will be needed:
 
 
-<pre>   
-        nat {
-        rule 2 {
-            description plex
-            destination {
-                group {
-                    address-group ADDRv4_eth5
-                }
-                port 32400
-            }
-            inbound-interface eth5
-            inside-address {
-                address 192.168.1.24
-                port 32400
-            }
-            log disable
-            protocol tcp_udp
-            type destination
-        }
-</pre>
-
-
-
-
-```
 set service nat rule 5010 description 'masquerade for WAN'
 set service nat rule 5010 outbound-interface eth0.0
 set service nat rule 5010 type masquerade
