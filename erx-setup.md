@@ -103,6 +103,8 @@ commit
 
 ### Set service:
 #### dhcp-server:
+> you will probably want to tweak this section depending on how you want your local IP addresses assigned
+> I have static mappings for most of my devices, and only have a dhcp pool for 10 possible devices
 ```
 set service dhcp-server disabled false
 set service dhcp-server hostfile-update disable
