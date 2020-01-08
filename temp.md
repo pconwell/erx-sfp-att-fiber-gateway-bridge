@@ -1,47 +1,3 @@
-## configure
-
-```
-configure
-
-delete interfaces
-
-set interfaces ethernet eth0 description WAN
-set interfaces ethernet eth0 firewall in name WAN_IN
-set interfaces ethernet eth0 firewall local name WAN_LOCAL
-set interfaces ethernet eth0 vif 0 address dhcp
-set interfaces ethernet eth0 vif 0 description 'WAN VLAN 0'
-set interfaces ethernet eth0 vif 0 dhcp-options default-route update
-set interfaces ethernet eth0 vif 0 dhcp-options default-route-distance 210
-set interfaces ethernet eth0 vif 0 dhcp-options name-server update
-set interfaces ethernet eth0 vif 0 firewall in name WAN_IN
-set interfaces ethernet eth0 vif 0 firewall local name WAN_LOCAL
-set interfaces ethernet eth0 vif 0 mac e0:22:04:86:c9:80
-
-set interfaces ethernet eth5 description 'ATT Gateway'
-
-set interfaces switch switch0 description Local
-set interfaces switch switch0 switch-port interface eth1
-set interfaces switch switch0 switch-port interface eth2
-set interfaces switch switch0 switch-port interface eth3
-set interfaces switch switch0 switch-port interface eth4
-set interfaces switch switch0 switch-port vlan-aware disable
-
-delete service nat
-
-set service nat rule 5010 description 'masquerade for WAN'
-set service nat rule 5010 outbound-interface eth0.0
-set service nat rule 5010 type masquerade
-
-set system offload hwnat enable
-set system offload ipsec enable
-
-delete interfaces ethernet eth0 address
-set port-forward wan-interface eth0.0
-
-commit-confirm
-```
-
-
 ## eap_proxy.sh
 
 `vi /config/scripts/post-config.d/eap_proxy.sh`
@@ -953,11 +909,60 @@ if __name__ == "__main__":
     sys.exit(main())
 ```
 
-## test config
+## permissions
 
 `sudo chmod +x /config/scripts/eap_proxy.py`  
 `sudo chmod +x /config/scripts/post-config.d/eap_proxy.sh`  
+
+## configure
+
+```
+configure
+
+delete interfaces
+
+set interfaces ethernet eth0 description WAN
+set interfaces ethernet eth0 firewall in name WAN_IN
+set interfaces ethernet eth0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 vif 0 address dhcp
+set interfaces ethernet eth0 vif 0 description 'WAN VLAN 0'
+set interfaces ethernet eth0 vif 0 dhcp-options default-route update
+set interfaces ethernet eth0 vif 0 dhcp-options default-route-distance 210
+set interfaces ethernet eth0 vif 0 dhcp-options name-server update
+set interfaces ethernet eth0 vif 0 firewall in name WAN_IN
+set interfaces ethernet eth0 vif 0 firewall local name WAN_LOCAL
+set interfaces ethernet eth0 vif 0 mac e0:22:04:86:c9:80
+
+set interfaces ethernet eth5 description 'ATT Gateway'
+
+set interfaces switch switch0 description Local
+set interfaces switch switch0 switch-port interface eth1
+set interfaces switch switch0 switch-port interface eth2
+set interfaces switch switch0 switch-port interface eth3
+set interfaces switch switch0 switch-port interface eth4
+set interfaces switch switch0 switch-port vlan-aware disable
+
+delete service nat
+
+set service nat rule 5010 description 'masquerade for WAN'
+set service nat rule 5010 outbound-interface eth0.0
+set service nat rule 5010 type masquerade
+
+set system offload hwnat enable
+set system offload ipsec enable
+
+delete interfaces ethernet eth0 address
+set port-forward wan-interface eth0.0
+
+commit-confirm
+```
+
+## test config
+
+in a new terminal  
 `sudo python /config/scripts/eap_proxy.py --restart-dhcp --ignore-when-wan-up --ignore-logoff --ping-gateway --set-mac eth0 eth5`  
+
+If it works, `confirm`
 
 powercycle router and wait. if it works.
 
