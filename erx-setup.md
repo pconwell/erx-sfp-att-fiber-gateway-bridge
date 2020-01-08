@@ -123,6 +123,7 @@ commit
 
 #### dns:
 > I am using a separate DNS server (pihole) at 192.168.1.24  
+> I'm not 100% sure these settings are correct, but it seems to be working fine
 
 ```
 set service dns forwarding cache-size 300
