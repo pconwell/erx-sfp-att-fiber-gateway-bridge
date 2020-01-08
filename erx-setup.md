@@ -1,3 +1,5 @@
+> Note, this is just to get the ERX-SFP configuration set correctly, you will still need to configure and run eap_proxy. Once I get everything figured out correctly, I will update these instructions to fully walk through this process step-by-step.
+
 # WIP
 This is still a work in progress, I have not yet been able to test these particular configuration settings
 
